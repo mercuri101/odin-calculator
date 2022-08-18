@@ -1,0 +1,45 @@
+body {
+  display: flex;
+  margin: 0;
+  justify-content: center;
+  padding-top: 50px;
+}
+
+
+.calculator {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  border: 1px solid black;
+}
+
+.display {
+  display: flex;
+  justify-content: flex-end;
+  border: 1px solid black;
+  font-size: 25px;
+  font-weight: bold;
+  font-family: 'Courier New', Courier, monospace;
+  padding: 5px 10px;
+}
+
+.control {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid black;
+  font-size: 50px;
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.row {
+  display: flex;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  border-radius: 5px;
+  flex: 1 1 0;
+}

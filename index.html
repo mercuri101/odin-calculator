@@ -4,9 +4,48 @@
     <title>Calculator</title>
     <meta charset="utf-8">
     <script src="./script.js" defer></script>
+    <link rel="stylesheet" href="./style.css">
   </head>
 
   <body>
+    <div class="calculator">
+      <div class="display">
+        5 + 5 = 11
+      </div>
+
+      <div class="control">
+        <div class="row">
+          <div class="button cl" data-btn="clear">C</div>
+          <div class="button back" data-btn="backspace">&larr;</div>
+          <div class="button misc" data-btn="(">(</div>
+          <div class="button misc" data-btn=")">)</div>
+        </div>
+        <div class="row">
+          <div class="button eq" data-btn="equals">=</div>
+          <div class="button digit" data-btn="0">0</div>
+          <div class="button misc" data-btn="dot">.</div>
+          <div class="button op" data-btn="+">+</div>
+        </div>
+        <div class="row">
+          <div class="button digit" data-btn="1">1</div>
+          <div class="button digit" data-btn="2">2</div>
+          <div class="button digit" data-btn="3">3</div>
+          <div class="button op" data-btn="-">-</div>
+        </div>
+        <div class="row">
+          <div class="button digit" data-btn="4">4</div>
+          <div class="button digit" data-btn="5">5</div>
+          <div class="button digit" data-btn="6">6</div>
+          <div class="button op" data-btn="*">*</div>
+        </div>
+        <div class="row">
+          <div class="button digit" data-btn="7">7</div>
+          <div class="button digit" data-btn="8">8</div>
+          <div class="button digit" data-btn="9">9</div>
+          <div class="button op" data-btn="/">/</div>
+        </div>
+      </div>
+    </div>
 
   </body>
 </html>
