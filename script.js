@@ -23,9 +23,39 @@ eqBtn.addEventListener("click", () => showResult());
 
 
 function populateDisplay(button) {
-  if ((button.textContent === "0") && inputStack.length === 0) {
-    return;
+
+  // Validate entering "0"
+  if (button.getAttribute("data-btn") === "0") {
+    // if clicked first
+    if (inputStack.length === 0) {
+      return;
+    }
+    // if reduntant leading zero
+    if (inputStack[inputStack.length-1].getAttribute("data-btn") === "0" &&
+        !(inputStack[inputStack.length-2].classList.contains("digit")) &&
+        !(inputStack[inputStack.length-2].classList.contains("misc"))){
+      return;
+    }
   }
+
+  // Validate entering "."
+  if (button.getAttribute("data-btn") === ".") {
+    // if clicked twice within a single number
+    let dotPresent = false;
+    for (let i = inputStack.length-1; i >= 0 && !(inputStack[i].classList.contains("op")); i--) {
+      if (inputStack[i].getAttribute("data-btn") === ".") {
+        dotPresent = true;
+      }
+    }
+    if (dotPresent) {
+      return;
+    }
+    // if no leading zeros
+    if ((inputStack.length === 0 || !(inputStack[inputStack.length-1].classList.contains("digit")))) {
+      inputStack.push(buttonsToShow.find(button => button.getAttribute("data-btn") === "0"));
+    }
+  }
+
 
   inputStack.push(button);
   updateDisplay();
@@ -208,7 +238,7 @@ function chainExpression(expressionArray) {
 
 
 // evaluateExpression: Takes an expression object as input and
-//                     recursively operates on all of its expressions
+//                     recursively operates on all of its subexpressions
 //                     (via operate(op, opn1, opn2)).
 //                     Returns the result of evaluation as a number.
 function evaluateExpression(expressionObject) {
