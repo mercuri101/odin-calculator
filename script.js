@@ -22,15 +22,17 @@ backBtn.addEventListener("click", () => popFromDisplay());
 eqBtn.addEventListener("click", () => showResult());
 
 
+// populateDisplay: Validates the input and
+//                  updates the input stack accordingly.
 function populateDisplay(button) {
 
   // Validate entering "0"
   if (button.getAttribute("data-btn") === "0") {
-    // if clicked first
+    // If clicked first, do nothing
     if (inputStack.length === 0) {
       return;
     }
-    // if reduntant leading zero
+    // If reduntant leading zero, do nothing
     if (inputStack[inputStack.length-1].getAttribute("data-btn") === "0" &&
         !(inputStack[inputStack.length-2].classList.contains("digit")) &&
         !(inputStack[inputStack.length-2].classList.contains("misc"))){
@@ -40,7 +42,7 @@ function populateDisplay(button) {
 
   // Validate entering "."
   if (button.getAttribute("data-btn") === ".") {
-    // if clicked twice within a single number
+    // If clicked twice within a single number, do nothing
     let dotPresent = false;
     for (let i = inputStack.length-1; i >= 0 && !(inputStack[i].classList.contains("op")); i--) {
       if (inputStack[i].getAttribute("data-btn") === ".") {
@@ -50,12 +52,27 @@ function populateDisplay(button) {
     if (dotPresent) {
       return;
     }
-    // if no leading zeros
+    // If no leading zeros, add a leading zero
     if ((inputStack.length === 0 || !(inputStack[inputStack.length-1].classList.contains("digit")))) {
       inputStack.push(buttonsToShow.find(button => button.getAttribute("data-btn") === "0"));
     }
   }
 
+  // Validate entering operators
+  if (button.classList.contains("op")) {
+    // If clicked first, do nothing
+    if ((inputStack.length === 0)) {
+      return;
+    }
+    // If clicked twice in a row, replace the previous one
+    if (inputStack[inputStack.length-1].classList.contains("op")) {
+      inputStack.pop();
+    }
+    // If clicked after a trailing dot, add a trailing zero
+    if (inputStack[inputStack.length-1].getAttribute("data-btn") === ".") {
+      inputStack.push(buttonsToShow.find(button => button.getAttribute("data-btn") === "0"));
+    }
+  }
 
   inputStack.push(button);
   updateDisplay();
@@ -142,7 +159,7 @@ function operate(op, a, b) {
 // createExpressionArray: Creates an array of objects, each having type and
 //                        value properties. Type can be either of two:
 //                        op (operator) or number.
-//                        It uses the input stack and its output is basically
+//                        It uses the input stack, and its output is basically
 //                        an array representation of the expression.
 //                        It is an intermediate process for convenience and is
 //                        used while creating the main data structure of the
@@ -171,7 +188,8 @@ function createExpressionArray() {
 //                         Expression object is an object representation
 //                         of the expression, with properties opn1 (operand-1),
 //                         opn2 (operand-2), and op (operator).
-//                         Operands of the expression can be other smaller expressions.
+//                         Operands of the expression can be other smaller expressions
+//                         in the form of objects.
 function createExpressionObject(expressionArray) {
   let expressionObject = {};
   let len = expressionArray.length;
@@ -183,21 +201,22 @@ function createExpressionObject(expressionArray) {
     expressionObject.opn2 = expressionArray[2].value;
   }
 
-  // If last operator is low-precedence
+  // If the last operator is low-precedence
   else if (expressionArray[len-2].value === "+" || expressionArray[len-2].value === "-") {
     expressionObject.op = expressionArray[len-2].value;
     expressionObject.opn1 = createExpressionObject(expressionArray.slice(0, -2));
     expressionObject.opn2 = expressionArray[len-1].value;
   }
 
-  // If last operator is high-precedence
+  // If the last operator is high-precedence
   else {
     let i = len - 4;
+    // Search for the last low-precedence operator
     while (expressionArray[i].value !== "+" && expressionArray[i].value !== "-" && i > 0) {
       i--;
     }
 
-    // If all operators are high-precedence
+    // If all operators are high-precedence, chain the expression (see below)
     if (i === 0) {
       return chainExpression(expressionArray);
     }
@@ -218,6 +237,10 @@ function createExpressionObject(expressionArray) {
 
 // chainExpression: Used to quickly create an expression object
 //                  from a chain of high-precedence operations.
+//                  Opn2 is always the last number in the expression, while
+//                  opn1 is assigned everything else as a subexpression.
+//                  It's executed recursively until opn1 is assigned a
+//                  single number.
 function chainExpression(expressionArray) {
   let expressionObject = {};
   let len = expressionArray.length;
