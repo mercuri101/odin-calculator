@@ -11,7 +11,7 @@ let buttonsToShow = Array.from(buttons).filter(button => !(button.classList.cont
 buttonsToShow.forEach(button => button.addEventListener("click", () => populateDisplay(button)));
 clearBtn.addEventListener("click", () => clearDisplay());
 backBtn.addEventListener("click", () => popFromDisplay());
-eqBtn.addEventListener("click", () => console.log(evaluateExpression(createExpressionObject(createExpressionArray()))));
+eqBtn.addEventListener("click", () => showResult());
 
 
 function populateDisplay(item) {
@@ -23,6 +23,12 @@ function populateDisplay(item) {
   updateDisplay();
 }
 
+
+function showResult() {
+  let result = evaluateExpression(createExpressionObject(createExpressionArray()));
+  display.textContent = result;
+  inputStack = [];
+}
 
 function clearDisplay() {
   inputStack = [];
