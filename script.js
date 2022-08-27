@@ -146,24 +146,30 @@ function createExpressionObject(expressionArray) {
   let expressionObject = {};
   let len = expressionArray.length;
 
-  // If last operator is low-precedence:
-  if (expressionArray[len-2].value === "+" || expressionArray[len-2].value === "-") {
-    expressionObject.op = expressionArray[len-2].value;
-    expressionObject.opn2 = expressionArray[len-1].value;
+  // If the expression is simple
+  if (len === 3) {
+    expressionObject.op = expressionArray[1].value;
+    expressionObject.opn1 = expressionArray[0].value;
+    expressionObject.opn2 = expressionArray[2].value;
+  }
 
-    if (expressionArray.length === 3) {
-      expressionObject.opn1 = expressionArray[0].value;
-    }
-    else {
-      expressionObject.opn1 = createExpressionObject(expressionArray.slice(0, -2));
-    }
+  // If last operator is low-precedence
+  else if (expressionArray[len-2].value === "+" || expressionArray[len-2].value === "-") {
+    expressionObject.op = expressionArray[len-2].value;
+    expressionObject.opn1 = createExpressionObject(expressionArray.slice(0, -2));
+    expressionObject.opn2 = expressionArray[len-1].value;
   }
 
   // If last operator is high-precedence
   else {
     let i = len - 4;
-    while (expressionArray[i].value !== "+" && expressionArray[i].value !== "-") {
+    while (expressionArray[i].value !== "+" && expressionArray[i].value !== "-" && i > 0) {
       i--;
+    }
+
+    // If all operators are high-precedence
+    if (i === 0) {
+      return chainExpression(expressionArray);
     }
 
     expressionObject.op = expressionArray[i].value;
@@ -173,9 +179,7 @@ function createExpressionObject(expressionArray) {
     else {
       expressionObject.opn1 = createExpressionObject(expressionArray.slice(0, i));
     }
-
     expressionObject.opn2 = chainExpression(expressionArray.slice(i+1));
-
   }
 
   return expressionObject;
