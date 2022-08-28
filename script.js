@@ -27,6 +27,11 @@ eqBtn.addEventListener("click", () => showResult());
 //                  updates the input stack accordingly.
 function populateDisplay(button) {
 
+  // If the display is full, do nothing
+  if (inputStack.length === 24) {
+    return;
+  }
+
   // Validate input while previous result is being displayed
   if (resultShown === true) {
     // If numbers are entered, withdraw the result
