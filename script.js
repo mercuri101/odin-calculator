@@ -130,6 +130,13 @@ function showResult() {
 
   let result = evaluateExpression(createExpressionObject(expressionArray));
 
+  // Check for division by zero
+  if (result === null) {
+    inputStack = [];
+    display.textContent = "ERROR";
+    return;
+  }
+
   // The following registers the result in the input stack, as if
   // it was entered within a new expression, to enable using it in
   // new expressions.
@@ -167,6 +174,10 @@ function divide(a, b) {
 
 
 function operate(op, a, b) {
+  if (a === null || b === null) {
+    return null;
+  }
+
   switch (op) {
     case "+": return add(a, b);
     case "-": return subtract(a, b);
@@ -296,8 +307,9 @@ function evaluateExpression(expressionObject) {
   if (typeof(expressionObject) === "number") {
     return expressionObject;
   }
-  else if (typeof(expressionObject.opn1) === "number" && typeof(expressionObject.opn2) === "number") {
-    return operate(expressionObject.op, expressionObject.opn1, expressionObject.opn2);
+  else if ((expressionObject.opn2 === 0 && expressionObject.op === "/") ||
+           (expressionObject.opn1 === null || expressionObject.opn2 === null)) {
+    return null;
   }
   else {
     return operate(expressionObject.op, evaluateExpression(expressionObject.opn1), evaluateExpression(expressionObject.opn2));
