@@ -110,8 +110,16 @@ function updateDisplay() {
 
 function showResult() {
   let result = evaluateExpression(createExpressionObject(createExpressionArray()));
-  display.textContent = result;
+
+  // The following registers the result in the input stack, as if
+  // it was entered within a new expression, to enable using it in
+  // new expressions.
   inputStack = [];
+  let resultString = result.toString();
+  resultString.split("").forEach(char => inputStack.push(
+                                         buttonsToShow.find(
+                                         button => button.getAttribute("data-btn") === char)));
+  updateDisplay();
 }
 
 
@@ -201,14 +209,14 @@ function createExpressionObject(expressionArray) {
     expressionObject.opn2 = expressionArray[2].value;
   }
 
-  // If the last operator is low-precedence
+  // If the expression is not simple, and the last operator is low-precedence
   else if (expressionArray[len-2].value === "+" || expressionArray[len-2].value === "-") {
     expressionObject.op = expressionArray[len-2].value;
     expressionObject.opn1 = createExpressionObject(expressionArray.slice(0, -2));
     expressionObject.opn2 = expressionArray[len-1].value;
   }
 
-  // If the last operator is high-precedence
+  // If the expression is not simple, and the last operator is high-precedence
   else {
     let i = len - 4;
     // Search for the last low-precedence operator
@@ -262,7 +270,7 @@ function chainExpression(expressionArray) {
 
 // evaluateExpression: Takes an expression object as input and
 //                     recursively operates on all of its subexpressions
-//                     (via operate(op, opn1, opn2)).
+//                     (via operate(op, opn1, opn2), see above).
 //                     Returns the result of evaluation as a number.
 function evaluateExpression(expressionObject) {
   if (typeof(expressionObject) === "number") {
