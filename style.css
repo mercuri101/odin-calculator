@@ -5,6 +5,10 @@ body {
   padding-top: 50px;
 }
 
+.border {
+  border: 3px solid black;
+  border-radius: 15px;
+}
 
 .calculator {
   display: flex;
@@ -20,9 +24,8 @@ body {
   display: flex;
   justify-content: flex-end;
   border-bottom: 3px solid darkslategray;
-  font-size: 35px;
-  font-weight: bold;
-  font-family: 'Courier New', Courier, monospace;
+  font-size: 40px;
+  font-family: monospace;
   padding: 5px 10px;
 }
 
