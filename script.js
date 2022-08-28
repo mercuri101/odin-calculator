@@ -9,6 +9,7 @@ let displayContent = "";
 // inputStack is used to keep track of buttons
 // that have been clicked.
 inputStack = [];
+let resultShown = false;
 
 // buttonsToShow is an array containing buttons that
 // must display their value when clicked, as opposed to
@@ -25,6 +26,17 @@ eqBtn.addEventListener("click", () => showResult());
 // populateDisplay: Validates the input and
 //                  updates the input stack accordingly.
 function populateDisplay(button) {
+
+  // Validate input while previous result is being displayed
+  if (resultShown === true) {
+    // If numbers are entered, withdraw the result
+    if (!(button.classList.contains("op"))) {
+      while (inputStack.length > 0) {
+        inputStack.pop();
+      }
+    }
+    resultShown = false;
+  }
 
   // Validate entering "0"
   if (button.getAttribute("data-btn") === "0") {
@@ -109,7 +121,14 @@ function updateDisplay() {
 
 
 function showResult() {
-  let result = evaluateExpression(createExpressionObject(createExpressionArray()));
+  let expressionArray = createExpressionArray();
+
+  // If there is nothing to evaluate, return
+  if (expressionArray.length === 1) {
+    return;
+  }
+
+  let result = evaluateExpression(createExpressionObject(expressionArray));
 
   // The following registers the result in the input stack, as if
   // it was entered within a new expression, to enable using it in
@@ -119,6 +138,7 @@ function showResult() {
   resultString.split("").forEach(char => inputStack.push(
                                          buttonsToShow.find(
                                          button => button.getAttribute("data-btn") === char)));
+  resultShown = true;
   updateDisplay();
 }
 
