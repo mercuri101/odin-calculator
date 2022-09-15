@@ -61,9 +61,14 @@ body {
   user-select: none;
 }
 
-.button:hover {
+/* .button:hover {
   box-shadow: 0 0 3px black inset;
-  font-size: 48px;
+  font-size: 95%;
+} */
+
+.button:active {
+  box-shadow: 0 0 4px black inset;
+  font-size: 92%;
 }
 
 
