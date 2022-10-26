@@ -68,7 +68,11 @@ body {
 
 .button:active {
   box-shadow: 0 0 4px black inset;
-  font-size: 92%;
+  font-size: 93%;
+}
+
+.button.back:active {
+  font-size: 100%;
 }
 
 
