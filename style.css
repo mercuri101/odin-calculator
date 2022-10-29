@@ -71,10 +71,6 @@ body {
   font-size: 93%;
 }
 
-.button.back:active {
-  font-size: 100%;
-}
-
 
 .button.digit {
   background-color: honeydew;
